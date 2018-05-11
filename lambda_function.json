@@ -1,0 +1,75 @@
+/* eslint-disable  func-names */
+/* eslint quote-props: ["error", "consistent"]*/
+/**
+ * This sample demonstrates a simple skill built with the Amazon Alexa Skills
+ * nodejs skill development kit.
+ * This sample supports multiple lauguages. (en-US, en-GB, de-DE).
+ * The Intent Schema, Custom Slots and Sample Utterances for this skill, as well
+ * as testing instructions are located at https://github.com/alexa/skill-sample-nodejs-fact
+ **/
+
+'use strict';
+const Alexa = require('alexa-sdk');
+
+//=========================================================================================================================================
+//TODO: The items below this comment need your attention.
+//=========================================================================================================================================
+
+//Replace with your app ID (OPTIONAL).  You can find this value at the top of your skill's page on http://developer.amazon.com.
+//Make sure to enclose your value in quotes, like this: const APP_ID = 'amzn1.ask.skill.bb4045e6-b3e8-4133-b650-72923c5980f1';
+const APP_ID = 'amzn1.ask.skill.ecdd1695-cc42-4469-a974-034ba7a28057';
+
+const SKILL_NAME = 'IPL CALENDER';
+const GET_FACT_MESSAGE = "Here's your whole schedule for IPL: ";
+const HELP_MESSAGE = 'You can say Give me schedule of IPL matches, or, you can say exit... What can I help you with?';
+const HELP_REPROMPT = 'What can I help you with?';
+const STOP_MESSAGE = 'Goodbye!';
+
+//=========================================================================================================================================
+//TODO: Replace this data with your own.  You can find translations of this data at http://github.com/alexa/skill-sample-node-js-fact/lambda/data
+//=========================================================================================================================================
+const data = [
+    'IPL stands for indian premier legue.  is a professional Twenty20 cricket league in India contested during April and May of every year by teams representing Indian cities. The league was founded by the Board of Control for Cricket in India (BCCI) in 2007, and is regarded as the brainchild of Lalit Modi, the founder and former commissioner of the league. IPL has an exclusive window in ICC Future Tours Programme,Different teams of IPL are named as : Mumbai Indians,Kolkata Knight Riders ,Delhi Daredevils,Rajasthan Royals,Kings eleven Punjab,Royal Challengers Bangalore,Sunrisers Hyderabad IPL will start from seventh of april two thousand Eighteen. Schedule is as follows:,On 7 of april there will be an opening ceremony and first match is between mumbai indians and chennai super kings at 8 pm,on 8 of april match is between delhi derdevils and kings eleven punjab at 4 pm and on the same day second match is between kolkata knight riders and royal challengers banglore,on 9 of april match is between sunrisers hyderabad and rajasthan royals at 8 pm,on 10 of april match is between kolkata knight riders and chennai super kings ,on 11 of april match is between rajsthan royals and delhi derdevils, on 12 of april match is between sunrisers hyderabad and mumbai indians, on 13 o fapril match is between royal challengers banglore and kings eleven punjab,ON 14 of april first match is between mumbai indians and delhi derdevils and second match is between kolkata knight riders and sunrisers hyderabad ,on 15 of april first match is between royal challengers banglore and rajasthan royals and second match is between kings eleven punjab and chennai super kings at 8 pm ,on 16 of april match is  between kolkata knight riders and delhi derdevils at 8 pm ,on 17 of april match is between royal challengers banglore and mumbai indians at 8 pm ,on 18 of april match is between rajasthan royals and kolkata knight riders at 8 pm,on 19 of april match is between kings eleven punjab and sunrisers hyderabad at 8 pm,on 20 of april match is between chennai super kings and rajasthan royals at 8 pm,on 21 of april first match is between kolkata knight riders and kings eleven punjab and second match is between delhi derdevils and royal challengers banglore at 8 pm,on 22 of april first match is between sunrisers hyderabad and chennai super kings and second match is between rajasthan royals and mumbai indians at 8 pm,on 23 of april match is between kings eleven punjab and delhi derdevils at 8 pm,on 24 of april match is between mumbai indians and sunrisers hyderabad at 8 pm,on 25 of april match is between royal challengers banglore and chennai super kings at 8 pm,on 26 of april match is between sunrisers hyderabad and kings eleven punjab at 8 pm,on 27 of april match is between delhi derdevils and kolkata knight riders at 8 pm,on 28 of april match is between chennai super kings and mumbai indians at 8 pm,on 29 of april first match is between rajasthan royals and sunrisers hyderabad and second match is between royal challengers banglore and kolkata knight riders at 8 pm,on 30 of april match is between chennai super kings and delhi derdevils at 8 pm,on 1 of may match is between royal challengers banglore and mumbai indians at 8 pm,on 2 of may match is between delhi derdevils and rajasthan royals at 8 pm,on 3 of may match is between kolkata knight riders and chennai super kings at 8 pm,on 4 of may match is between kings eleven punjab and mumbai indians at 8 pm,on 5 of may first match is between chennai super kings and royal challengers banglore and second match is between sunrisers hyderabad and delhi derdevils at 8 pm,on 6 of may first match is between mumbai indians and kolkata knight riders and second match is between kings eleven punjab and rajasthan royals at 8 pm,on 7 of may match is between sunrisers hyderabad and royal challengers banglore at 8 pm,on 8 of may match is between rajasthan royals and kings eleven punjab at 8 pm,The results of finals and semifinals will be decided on the basis of the scores of each team thankyou.'
+];
+
+//=========================================================================================================================================
+//Editing anything below this line might break your skill.
+//=========================================================================================================================================
+
+exports.handler = function(event, context, callback) {
+    var alexa = Alexa.handler(event, context);
+    alexa.appId = APP_ID;
+    alexa.registerHandlers(handlers);
+    alexa.execute();
+};
+
+const handlers = {
+    'LaunchRequest': function () {
+        this.emit('IPLcalender');
+    },
+    'IPLcalender': function () {
+        const factArr = data;
+        const factIndex = Math.floor(Math.random() * factArr.length);
+        const randomFact = factArr[factIndex];
+        const speechOutput = GET_FACT_MESSAGE + randomFact;
+
+        this.response.cardRenderer(SKILL_NAME, randomFact);
+        this.response.speak(speechOutput);
+        this.emit(':responseReady');
+    },
+    'AMAZON.HelpIntent': function () {
+        const speechOutput = HELP_MESSAGE;
+        const reprompt = HELP_REPROMPT;
+
+        this.response.speak(speechOutput).listen(reprompt);
+        this.emit(':responseReady');
+    },
+    'AMAZON.CancelIntent': function () {
+        this.response.speak(STOP_MESSAGE);
+        this.emit(':responseReady');
+    },
+    'AMAZON.StopIntent': function () {
+        this.response.speak(STOP_MESSAGE);
+        this.emit(':responseReady');
+    },
+};
